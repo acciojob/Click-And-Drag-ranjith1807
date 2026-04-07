@@ -35,7 +35,50 @@
   </div>
 
 <script>
-//Your code goes here 
+//Your code goes here const slider = document.querySelector('.items');
+
+let isDown = false;
+let startX;
+let scrollLeft;
+
+// 1. Mouse Down: Start the drag
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
+  slider.style.cursor = 'grabbing'; // Optional: visual feedback
+  
+  // Get the initial X position of the mouse relative to the slider
+  startX = e.pageX - slider.offsetLeft;
+  
+  // Store the current scroll position before dragging starts
+  scrollLeft = slider.scrollLeft;
+});
+
+// 2. Mouse Leave: Cancel drag if the cursor leaves the container
+slider.addEventListener('mouseleave', () => {
+  isDown = false;
+  slider.style.cursor = 'pointer';
+});
+
+// 3. Mouse Up: Stop the drag
+slider.addEventListener('mouseup', () => {
+  isDown = false;
+  slider.style.cursor = 'pointer';
+});
+
+// 4. Mouse Move: Execute the scroll
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return; // Stop the function from running if not clicked
+  e.preventDefault();  // Prevent default behavior like text highlighting
+  
+  // Calculate the new X position
+  const x = e.pageX - slider.offsetLeft;
+  
+  // Calculate how far the mouse has moved (the "walk")
+  const walk = x - startX; 
+  
+  // Apply the movement to the scrollbar (subtracting moves it the correct natural direction)
+  slider.scrollLeft = scrollLeft - walk;
+});
 </script>
 
   </body>
