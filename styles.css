@@ -1,44 +1,27 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f4f4f9;
-    font-family: sans-serif;
-}
-
-/* The defined area */
-.container {
+.container.items {
     width: 500px;
     height: 500px;
-    position: relative; /* Crucial for absolute positioning of cubes */
+    position: relative;
     background-color: #ffffff;
     border: 2px solid #ccc;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    overflow: hidden; /* Keeps cubes visually inside */
 }
 
-/* The draggable elements */
-.cube {
+.item {
     width: 60px;
     height: 60px;
     background-color: #3498db;
     border-radius: 8px;
-    position: absolute; /* Allows smooth x/y coordinate updates */
+    position: absolute;
     cursor: grab;
-    user-select: none; /* Prevents text selection while dragging */
+    user-select: none;
     transition: box-shadow 0.2s, transform 0.1s;
 }
 
-/* Visual feedback when interacting */
-.cube:hover {
-    background-color: #2980b9;
-}
-
-.cube:active {
+.item:active {
     cursor: grabbing;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05); /* Slight lift effect */
-    z-index: 100; /* Ensures the dragged cube is on top */
+    transform: scale(1.05);
+    z-index: 100;
 }

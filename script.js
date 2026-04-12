@@ -1,77 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('items');
-    const cubes = document.querySelectorAll('.cube');
+    const container = document.querySelector('.items');
+    const items = document.querySelectorAll('.item');
     
-    // Initial Setup: Arrange cubes in a grid format dynamically
-    const cubeSize = 60;
+    const size = 60;
     const gap = 15;
     const columns = 4;
 
-    cubes.forEach((cube, index) => {
+    // Grid Initialization
+    items.forEach((item, index) => {
         const row = Math.floor(index / columns);
         const col = index % columns;
-        
-        cube.style.left = `${col * (cubeSize + gap) + gap}px`;
-        cube.style.top = `${row * (cubeSize + gap) + gap}px`;
+        item.style.left = `${col * (size + gap) + gap}px`;
+        item.style.top = `${row * (size + gap) + gap}px`;
     });
 
-    // Drag State Variables
-    let activeCube = null;
-    let startMouseX = 0;
-    let startMouseY = 0;
-    let initialCubeLeft = 0;
-    let initialCubeTop = 0;
+    let activeItem = null;
+    let offset = { x: 0, y: 0 };
 
-    // 1. Selection (Mousedown)
-    cubes.forEach(cube => {
-        cube.addEventListener('mousedown', (e) => {
-            activeCube = cube;
+    items.forEach(item => {
+        item.addEventListener('mousedown', (e) => {
+            activeItem = item;
             
-            // Record starting mouse positions
-            startMouseX = e.clientX;
-            startMouseY = e.clientY;
-            
-            // Record starting cube positions
-            initialCubeLeft = activeCube.offsetLeft;
-            initialCubeTop = activeCube.offsetTop;
-            
-            // Bring active cube to the front visually
-            cubes.forEach(c => c.style.zIndex = 1);
-            activeCube.style.zIndex = 100;
+            // Calculate offset so the cube doesn't "jump" its center to the mouse
+            const rect = item.getBoundingClientRect();
+            offset.x = e.clientX - rect.left;
+            offset.y = e.clientY - rect.top;
+
+            items.forEach(i => i.style.zIndex = 1);
+            item.style.zIndex = 100;
         });
     });
 
-    // 2. Dragging (Mousemove)
-    // Attached to document so rapid mouse movements don't break the drag if the cursor slips off the cube
     document.addEventListener('mousemove', (e) => {
-        if (!activeCube) return;
+        if (!activeItem) return;
 
-        // Calculate how far the mouse has moved
-        const deltaX = e.clientX - startMouseX;
-        const deltaY = e.clientY - startMouseY;
+        const containerRect = container.getBoundingClientRect();
+        
+        // Calculate new position relative to container
+        let newX = e.clientX - containerRect.left - offset.x;
+        let newY = e.clientY - containerRect.top - offset.y;
 
-        // Calculate the proposed new position
-        let newLeft = initialCubeLeft + deltaX;
-        let newTop = initialCubeTop + deltaY;
+        // Boundary Constraints
+        const maxX = container.clientWidth - activeItem.offsetWidth;
+        const maxY = container.clientHeight - activeItem.offsetHeight;
 
-        // Constraint Handling: Calculate boundaries
-        const maxX = container.clientWidth - activeCube.offsetWidth;
-        const maxY = container.clientHeight - activeCube.offsetHeight;
+        newX = Math.max(0, Math.min(newX, maxX));
+        newY = Math.max(0, Math.min(newY, maxY));
 
-        // Apply boundaries (Prevents moving outside defined area)
-        newLeft = Math.max(0, Math.min(newLeft, maxX));
-        newTop = Math.max(0, Math.min(newTop, maxY));
-
-        // Update the cube's position visually
-        activeCube.style.left = `${newLeft}px`;
-        activeCube.style.top = `${newTop}px`;
+        activeItem.style.left = `${newX}px`;
+        activeItem.style.top = `${newY}px`;
     });
 
-    // 3. Drop (Mouseup)
-    // Attached to document to ensure release registers even if mouse is outside the container
     document.addEventListener('mouseup', () => {
-        if (activeCube) {
-            activeCube = null; // Clear the active element to stop dragging
-        }
+        activeItem = null;
     });
 });
