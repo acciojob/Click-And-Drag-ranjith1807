@@ -35,71 +35,32 @@
   </div>
 
 <script>
-//Your code goes here
-	const container = document.querySelector('.items');
-const items = document.querySelectorAll('.item');
+const slider = document.querySelector('.items');
 
-let current = null;
-let offsetX = 0;
-let offsetY = 0;
-let isDragging = false;
+let isDown = false;
+let startX;
+let scrollLeft;
 
-items.forEach(item => {
-  item.addEventListener('mousedown', (e) => {
-    current = item;
-    isDragging = false; // track click vs drag
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
 
-    const rect = item.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    // Convert to absolute positioning
-    item.style.position = "absolute";
-    item.style.left = (rect.left - containerRect.left) + "px";
-    item.style.top = (rect.top - containerRect.top) + "px";
-    item.style.width = rect.width + "px";
-
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-
-    item.style.zIndex = 1000;
-  });
-});
-
-document.addEventListener('mousemove', (e) => {
-  if (!current) return;
-
-  isDragging = true;
-
-  const containerRect = container.getBoundingClientRect();
-
-  let x = e.clientX - containerRect.left - offsetX;
-  let y = e.clientY - containerRect.top - offsetY;
-
-  // ✅ Boundary constraints (snap inside)
-  const maxX = container.clientWidth - current.offsetWidth;
-  const maxY = container.clientHeight - current.offsetHeight;
-
-  x = Math.max(0, Math.min(x, maxX));
-  y = Math.max(0, Math.min(y, maxY));
-
-  current.style.left = x + "px";
-  current.style.top = y + "px";
+  startX = e.pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
 });
 
 document.addEventListener('mouseup', () => {
-  if (!current) return;
-
-  // If it was just a click (no movement), do nothing
-  if (!isDragging) {
-    current.style.zIndex = "";
-    current = null;
-    return;
-  }
-
-  // Keep final position
-  current.style.zIndex = "";
-  current = null;
+  isDown = false;
 });
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDown) return;
+
+  const x = e.pageX - slider.offsetLeft;
+  const walk = x - startX;
+
+  slider.scrollLeft = scrollLeft - walk;
+});
+
 </script>
 
   </body>
