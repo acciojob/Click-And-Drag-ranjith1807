@@ -74,7 +74,7 @@ slider.addEventListener('mousemove', (e) => {
   const x = e.pageX - slider.offsetLeft;
   
   // Calculate how far the mouse has moved (the "walk")
-  const walk = x - startX; 
+  const walk = (x - startX)*2; 
   
   // Apply the movement to the scrollbar (subtracting moves it the correct natural direction)
   slider.scrollLeft = scrollLeft - walk;
