@@ -1,27 +1,43 @@
-#items {
-    display: flex; 
-    align-items: center;
-    width: 100%;
-    max-width: 600px; /* Or whatever width you prefer */
-    min-height: 160px; /* CRITICAL: Forces the height so Cypress can see it */
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: #ffffff;
-    border: 2px solid #ccc;
-    overflow-x: auto; /* Required to make scrollLeft work */
-    white-space: nowrap;
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
+/* Container */
+#items {
+  display: flex;
+  align-items: center;
+
+  width: 600px;
+  min-height: 160px; /* ensures visible height */
+
+  padding: 20px;
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+
+  overflow-x: auto;
+  overflow-y: hidden; /* IMPORTANT */
+
+  cursor: grab;
+}
+
+/* Items */
 .item {
-    flex: 0 0 100px; /* Don't shrink, don't grow, exactly 100px wide */
-    height: 100px;
-    background-color: #3498db;
-    border-radius: 8px;
-    margin-right: 20px; /* Spacing between cubes */
-    cursor: grab;
-    user-select: none;
+  flex: 0 0 100px;
+  height: 100px;
+
+  background-color: #3498db;
+  border-radius: 8px;
+
+  margin-right: 20px;
+  user-select: none;
 }
 
 .item:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }

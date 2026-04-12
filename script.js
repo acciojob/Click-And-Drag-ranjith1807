@@ -1,28 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const slider = document.getElementById('items');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+  const slider = document.getElementById('items');
 
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
+  let isDown = false;
+  let startX;
+  let scrollLeft;
 
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-    });
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.style.cursor = 'grabbing';
 
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-    });
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
 
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX); // How far the mouse moved
-        slider.scrollLeft = scrollLeft - walk; // Apply to scrollLeft
-    });
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.style.cursor = 'grab';
+  });
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.style.cursor = 'grab';
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+
+    e.preventDefault();
+
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 2; // improved drag sensitivity
+
+    slider.scrollLeft = scrollLeft - walk;
+  });
 });
