@@ -1,27 +1,17 @@
-.container.items {
+.items {
     width: 500px;
     height: 500px;
-    position: relative;
+    position: relative; /* Necessary for absolute children */
     background-color: #ffffff;
     border: 2px solid #ccc;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden; /* Keeps cubes visually inside */
+    overflow: hidden; /* Prevents scrollbars from appearing */
 }
 
 .item {
     width: 60px;
     height: 60px;
     background-color: #3498db;
-    border-radius: 8px;
-    position: absolute;
+    position: absolute; /* This moves via top/left, NOT scroll */
     cursor: grab;
     user-select: none;
-    transition: box-shadow 0.2s, transform 0.1s;
-}
-
-.item:active {
-    cursor: grabbing;
-    transform: scale(1.05);
-    z-index: 100;
 }

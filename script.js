@@ -2,53 +2,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.items');
     const items = document.querySelectorAll('.item');
     
-    const size = 60;
-    const gap = 15;
-    const columns = 4;
-
-    // Grid Initialization
+    // Grid Setup
     items.forEach((item, index) => {
-        const row = Math.floor(index / columns);
-        const col = index % columns;
-        item.style.left = `${col * (size + gap) + gap}px`;
-        item.style.top = `${row * (size + gap) + gap}px`;
+        item.style.left = `${(index % 4) * 75 + 15}px`;
+        item.style.top = `${Math.floor(index / 4) * 75 + 15}px`;
     });
 
     let activeItem = null;
-    let offset = { x: 0, y: 0 };
+    let startX, startY, initialLeft, initialTop;
 
-    items.forEach(item => {
-        item.addEventListener('mousedown', (e) => {
-            activeItem = item;
+    // Listen on container to catch events triggered by the test on '.items'
+    container.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('item')) {
+            activeItem = e.target;
+            startX = e.pageX;
+            startY = e.pageY;
+            initialLeft = parseInt(activeItem.style.left);
+            initialTop = parseInt(activeItem.style.top);
             
-            // Calculate offset so the cube doesn't "jump" its center to the mouse
-            const rect = item.getBoundingClientRect();
-            offset.x = e.clientX - rect.left;
-            offset.y = e.clientY - rect.top;
-
             items.forEach(i => i.style.zIndex = 1);
-            item.style.zIndex = 100;
-        });
+            activeItem.style.zIndex = 100;
+        }
     });
 
     document.addEventListener('mousemove', (e) => {
         if (!activeItem) return;
 
-        const containerRect = container.getBoundingClientRect();
-        
-        // Calculate new position relative to container
-        let newX = e.clientX - containerRect.left - offset.x;
-        let newY = e.clientY - containerRect.top - offset.y;
+        const dx = e.pageX - startX;
+        const dy = e.pageY - startY;
 
-        // Boundary Constraints
+        let newX = initialLeft + dx;
+        let newY = initialTop + dy;
+
+        // Boundary Checks
         const maxX = container.clientWidth - activeItem.offsetWidth;
         const maxY = container.clientHeight - activeItem.offsetHeight;
 
-        newX = Math.max(0, Math.min(newX, maxX));
-        newY = Math.max(0, Math.min(newY, maxY));
-
-        activeItem.style.left = `${newX}px`;
-        activeItem.style.top = `${newY}px`;
+        activeItem.style.left = `${Math.max(0, Math.min(newX, maxX))}px`;
+        activeItem.style.top = `${Math.max(0, Math.min(newY, maxY))}px`;
     });
 
     document.addEventListener('mouseup', () => {
