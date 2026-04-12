@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('container');
+    const container = document.getElementById('items');
     const cubes = document.querySelectorAll('.cube');
     
     // Initial Setup: Arrange cubes in a grid format dynamically
