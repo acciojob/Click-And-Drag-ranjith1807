@@ -35,34 +35,95 @@
   </div>
 
 <script>
-const slider = document.querySelector('.items');
+const container = document.querySelector('.items');
+const cubes = document.querySelectorAll('.item');
 
-let isDown = false;
-let startX;
-let scrollLeft;
+let isDragging = false;
+let currentCube = null;
+let startX, startY, initialLeft, initialTop;
 
-slider.addEventListener('mousedown', (e) => {
-  isDown = true;
-  startX = e.pageX;
-  scrollLeft = slider.scrollLeft;
+// 1. Initial Setup: Convert CSS layout to absolute positioning for free dragging
+window.addEventListener('load', () => {
+  const positions = [];
+
+  // Record initial positions first to prevent layout shifting
+  cubes.forEach(cube => {
+    positions.push({
+      left: cube.offsetLeft,
+      top: cube.offsetTop
+    });
+  });
+
+  // Apply absolute positioning so individual cubes can be moved freely
+  cubes.forEach((cube, i) => {
+    cube.style.position = 'absolute';
+    cube.style.left = `${positions[i].left}px`;
+    cube.style.top = `${positions[i].top}px`;
+    // Prevent default CSS transitions from causing drag lag
+    cube.style.transition = 'none'; 
+  });
 });
 
-slider.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
+// 2. Drag Behavior: Attach event listeners to each cube
+cubes.forEach(cube => {
+  cube.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    currentCube = cube;
 
-  const walk = e.pageX - startX;
+    // Bring the selected cube to the front
+    cubes.forEach(c => c.style.zIndex = '1');
+    cube.style.zIndex = '100';
+    
+    // Visual cue for grabbing
+    cube.style.cursor = 'grabbing';
 
-  slider.scrollLeft = scrollLeft - walk;
+    // Record the starting coordinates of the mouse and the cube
+    startX = e.clientX;
+    startY = e.clientY;
+    initialLeft = cube.offsetLeft;
+    initialTop = cube.offsetTop;
+  });
 });
 
-slider.addEventListener('mouseup', () => {
-  isDown = false;
+// 3. Movement Behavior: Update position dynamically
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging || !currentCube) return;
+
+  e.preventDefault(); // Prevent text selection and visual glitches while dragging
+
+  // Calculate how far the mouse has moved
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+
+  // Calculate the new intended position
+  let newLeft = initialLeft + dx;
+  let newTop = initialTop + dy;
+
+  // 4. Constraints Handling: Boundary checks to keep cubes inside the defined area
+  // Calculate maximum boundaries based on the container's padding box
+  const maxLeft = container.clientWidth - currentCube.offsetWidth;
+  const maxTop = container.clientHeight - currentCube.offsetHeight;
+
+  // Enforce boundary snapping
+  if (newLeft < 0) newLeft = 0;
+  if (newTop < 0) newTop = 0;
+  if (newLeft > maxLeft) newLeft = maxLeft;
+  if (newTop > maxTop) newTop = maxTop;
+
+  // Apply the new position
+  currentCube.style.left = `${newLeft}px`;
+  currentCube.style.top = `${newTop}px`;
 });
 
-slider.addEventListener('mouseleave', () => {
-  isDown = false;
+// 5. Drop Behavior: Releasing the mouse
+document.addEventListener('mouseup', () => {
+  if (isDragging && currentCube) {
+    // Reset cursor and dragging state
+    currentCube.style.cursor = 'pointer';
+    isDragging = false;
+    currentCube = null;
+  }
 });
-
 </script>
 
   </body>
