@@ -45,6 +45,7 @@ body {
 }
 
 .item {
+  flex: 0 0 300px;
   width: 200px;
   height: calc(100% - 40px);
   display: inline-flex;
