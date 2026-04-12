@@ -1,17 +1,27 @@
-.items {
-    width: 500px;
-    height: 500px;
-    position: relative; /* Necessary for absolute children */
+#items {
+    display: flex; 
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Or whatever width you prefer */
+    min-height: 160px; /* CRITICAL: Forces the height so Cypress can see it */
+    padding: 20px;
+    box-sizing: border-box;
     background-color: #ffffff;
     border: 2px solid #ccc;
-    overflow: hidden; /* Prevents scrollbars from appearing */
+    overflow-x: auto; /* Required to make scrollLeft work */
+    white-space: nowrap;
 }
 
 .item {
-    width: 60px;
-    height: 60px;
+    flex: 0 0 100px; /* Don't shrink, don't grow, exactly 100px wide */
+    height: 100px;
     background-color: #3498db;
-    position: absolute; /* This moves via top/left, NOT scroll */
+    border-radius: 8px;
+    margin-right: 20px; /* Spacing between cubes */
     cursor: grab;
     user-select: none;
+}
+
+.item:last-child {
+    margin-right: 0;
 }
