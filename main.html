@@ -43,22 +43,24 @@ let scrollLeft;
 
 slider.addEventListener('mousedown', (e) => {
   isDown = true;
-
-  startX = e.pageX - slider.offsetLeft;
+  startX = e.pageX;
   scrollLeft = slider.scrollLeft;
 });
 
-document.addEventListener('mouseup', () => {
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return;
+
+  const walk = e.pageX - startX;
+
+  slider.scrollLeft = scrollLeft - walk;
+});
+
+slider.addEventListener('mouseup', () => {
   isDown = false;
 });
 
-document.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
-
-  const x = e.pageX - slider.offsetLeft;
-  const walk = x - startX;
-
-  slider.scrollLeft = scrollLeft - walk;
+slider.addEventListener('mouseleave', () => {
+  isDown = false;
 });
 
 </script>
