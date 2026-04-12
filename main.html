@@ -50,12 +50,12 @@ slider.addEventListener('mousedown', (e) => {
 });
 
 slider.addEventListener('mouseleave', () => {
-  isDown = true;
+  isDown = false;
   slider.classList.remove('active');
 });
 
 slider.addEventListener('mouseup', () => {
-  isDown = true;
+  isDown = false;
   slider.classList.remove('active');
 });
 
