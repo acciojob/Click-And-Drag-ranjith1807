@@ -1,71 +1,44 @@
-html {
-  box-sizing: border-box;
-  background: url('https://source.unsplash.com/NFs6dRTBgaM/2000x2000') fixed;
-  background-size: cover;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
 body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: sans-serif;
-  font-size: 20px;
-  margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f9;
+    font-family: sans-serif;
 }
 
-.items {
-  height: 800px;
-  padding: 100px;
-  width: 100%;
-  border: 1px solid white;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  user-select: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  transform: scale(0.98);
-  will-change: transform;
-  position: relative;
-  background: rgba(255,255,255,0.1);
-  font-size: 0;
-  perspective: 500px;
+/* The defined area */
+.container {
+    width: 500px;
+    height: 500px;
+    position: relative; /* Crucial for absolute positioning of cubes */
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
-.items.active {
-  background: rgba(255,255,255,0.3);
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-  transform: scale(1);
+/* The draggable elements */
+.cube {
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    border-radius: 8px;
+    position: absolute; /* Allows smooth x/y coordinate updates */
+    cursor: grab;
+    user-select: none; /* Prevents text selection while dragging */
+    transition: box-shadow 0.2s, transform 0.1s;
 }
 
-.item {
-  flex: 0 0 300px;
-  width: 200px;
-  height: calc(100% - 40px);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
-  font-weight: 100;
-  color: rgba(0,0,0,0.15);
-  box-shadow: inset 0 0 0 10px rgba(0,0,0,0.15);
+/* Visual feedback when interacting */
+.cube:hover {
+    background-color: #2980b9;
 }
 
-.item:nth-child(9n+1) { background: dodgerblue;}
-.item:nth-child(9n+2) { background: goldenrod;}
-.item:nth-child(9n+3) { background: paleturquoise;}
-.item:nth-child(9n+4) { background: gold;}
-.item:nth-child(9n+5) { background: cadetblue;}
-.item:nth-child(9n+6) { background: tomato;}
-.item:nth-child(9n+7) { background: lightcoral;}
-.item:nth-child(9n+8) { background: darkslateblue;}
-.item:nth-child(9n+9) { background: rebeccapurple;}
-
-.item:nth-child(even) { transform: scaleX(1.31) rotateY(40deg); }
-.item:nth-child(odd) { transform: scaleX(1.31) rotateY(-40deg); }
+.cube:active {
+    cursor: grabbing;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05); /* Slight lift effect */
+    z-index: 100; /* Ensures the dragged cube is on top */
+}
